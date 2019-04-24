@@ -26,16 +26,11 @@
 <body>
     <div id="my_side_nav" class="side_nav">
 
-        {% if user.is_authenticated %}
-            <li><a href="{% url 'main_auth' %}">Strona główna</a></li>
-            <li><a href="{% url 'logout' %}">Wyloguj</a></li>
-        {% else %}
-            <li><a href="{% url 'signup' %}">Zarejestruj się</a></li>
-            <li><a href="{% url 'login' %}">Zaloguj</a></li>
-            <li><a id="move_to_main_two">Historia Mistrzostw</a></li>
-            <li><a id="move_to_main_three">Schronisko</a></li>
-            <li><a href="{% url 'main' %}">Strona główna</a></li>
-        {% endif %}
+        <li><a href="{% url 'signup' %}">Zarejestruj się</a></li>
+        <li><a href="{% url 'login' %}">Zaloguj</a></li>
+        <li><a id="move_to_main_two">Historia Mistrzostw</a></li>
+        <li><a id="move_to_main_three">Schronisko</a></li>
+        <li><a href="{% url 'main' %}">Strona główna</a></li>
 
     </div>
     <div id="main">

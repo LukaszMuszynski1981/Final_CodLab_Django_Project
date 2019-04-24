@@ -2,8 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, get_user_model
-from datetime import datetime, timedelta
-from .models import Reservations, Rooms
+from .models import Rooms
 
 
 User = get_user_model()
@@ -12,8 +11,8 @@ User = get_user_model()
 def get_types_r():
 
     types_r = {}
-    avaliable_types = Rooms.objects.exclude(avalamount__lte=0)
-    for _ in avaliable_types.iterator():
+    available_types = Rooms.objects.exclude(avalamount__lte=0)
+    for _ in available_types.iterator():
         types_r[_.type] = _.description
     return tuple(sorted(types_r.items()))
 
@@ -115,11 +114,6 @@ class ReservationForm(forms.Form):
         choices=types_i,
         label='Poziom'
     )
-
-
-class MyReservationForm(forms.Form):
-
-    id = forms.CharField(label='')
 
 
 class UploadFileForm(forms.Form):

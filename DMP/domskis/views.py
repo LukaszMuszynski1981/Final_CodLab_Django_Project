@@ -1,6 +1,4 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
 import datetime as dt
-from django.urls import reverse_lazy
 from django.http import HttpResponse, JsonResponse
 from django.contrib.sessions.models import Session
 from django.shortcuts import render, redirect
@@ -19,7 +17,6 @@ from .forms import (
     SignupForm,
     LoginForm,
     ReservationForm,
-    MyReservationForm,
     ResetPasswordForm,
     UploadFileForm,
     OnlyEmailForm,

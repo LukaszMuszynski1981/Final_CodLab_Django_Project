@@ -18,16 +18,10 @@
 </header>
 <div id="my_side_nav" class="side_nav">
 
-        {% if user.is_authenticated %}
-            <li><a href="{% url 'main_auth' %}">Strona główna</a></li>
-            <li><a href="{% url 'reservation' %}">Rezerwuj</a></li>
-            <li><a href="{% url 'my-reservation' %}">Moje rezerwacje</a></li>
-            <li><a href="{% url 'logout' %}">Wyloguj</a></li>
-        {% else %}
-            <li><a href="{% url 'main' %}">Strona główna</a></li>
-            <li><a href="{% url 'signup' %}">Zarejestruj się</a></li>
-            <li><a href="{% url 'login' %}">Zaloguj</a></li>
-        {% endif %}
+        <li><a href="{% url 'main_auth' %}">Strona główna</a></li>
+        <li><a href="{% url 'reservation' %}">Rezerwuj</a></li>
+        <li><a href="{% url 'my-reservation' %}">Moje rezerwacje</a></li>
+        <li><a href="{% url 'logout' %}">Wyloguj</a></li>
 
 </div>
 <div id="main">
@@ -59,8 +53,6 @@
 <div id="empty_div_two"></div>
 
 {% block js %}{% endblock %}
-<script>
 
-</script>
 </body>
 </html>
