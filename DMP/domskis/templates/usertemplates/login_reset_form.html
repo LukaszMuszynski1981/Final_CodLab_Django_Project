@@ -1,0 +1,22 @@
+{% extends 'usertemplates/base.html' %}
+
+{% block content_two %}
+
+    {% if msg %}
+        <h2 class="title_two">{{ msg }}</h2>
+    {% endif %}
+
+
+    <div>
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            {% for field in form  %}
+                <p>{{ field.label_tag }}<br>
+                    {{ field }}</p>
+            {% endfor %}
+            <a style="font-size: 10px" href="{% url 'reset-password' %}">Nie pamiętam hasła</a><br>
+            <button type="submit">Zaloguj</button>
+        </form>
+    </div>
+
+{% endblock %}>

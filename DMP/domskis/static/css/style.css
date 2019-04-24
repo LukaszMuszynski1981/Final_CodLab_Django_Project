@@ -1,0 +1,84 @@
+body {
+    font-family: 'Lucida Sans Unicode', 'Alegreya';
+    background: url("../jpg/imasz_2.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+}
+
+input {
+    font-family: 'Lucida Sans Unicode', 'Alegreya';
+}
+
+button{
+    font-family: 'Lucida Sans Unicode', 'Alegreya';
+}
+
+.title {
+    font-size: x-large;
+}
+
+.title_two {
+    font-size: large;
+}
+
+.title_four {
+    font-size: 10px;
+    padding-left: 145px;
+}
+.side_nav {
+    height: 100%;
+    width: 180px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: darkgray;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 40px;
+    opacity: 0.6;
+}
+
+.side_nav a {
+    padding: 4px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 17px;
+    color: #f1f1f1;
+    display: block;
+    transition: 0.3s;
+}
+
+.side_nav a:hover {
+    color: black;
+    font-size: 20px;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+    margin-left: 160px;
+}
+
+#main_two, #main_three{
+    transition: margin-left .5s;
+    /*padding: 16px;*/
+    padding-left: 180px;
+    /*margin-right: -20px;*/
+    size: auto;
+}
+
+#empty_div, #empty_div_two{
+    transition: margin-left .5s;
+    /*padding: 16px;*/
+    padding-left: 180px;
+    /*margin-right: -20px;*/
+    min-height: 300px;
+    height: auto;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 10px;}
+    .sidenav a {font-size: 18px;}
+}

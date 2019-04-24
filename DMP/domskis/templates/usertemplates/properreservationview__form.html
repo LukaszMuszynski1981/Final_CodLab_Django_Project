@@ -1,0 +1,73 @@
+{% extends 'usertemplates/base_auth.html' %}
+{% load staticfiles %}
+
+{% block content_two %}
+    <form action="{{ reservation.get_absolute_url }}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="div_reservation_form">
+
+            <p>{{ msg }}</p>
+            <p>
+                <table class="proper_reservation_table">
+                    <thead>
+                        <tr>
+                            <th>Imię</th>
+                            <th>Nazwisko</th>
+                            <th>Przyjazd</th>
+                            <th>Wyjazd</th>
+                            <th>Pokój</th>
+                        </tr>
+                    </thead>
+                        <tr>
+                            <td>{{ reservation.name }}</td>
+                            <td>{{ reservation.surname }}</td>
+                            <td>{{ reservation.arrival }}</td>
+                            <td>{{ reservation.departure }}</td>
+                            <td>{{ reservation.room.get_type_display}}</td>
+                        </tr>
+                </table>
+
+            <p>
+                <table class="proper_reservation_table">
+                    <thead>
+                        <tr>
+                            <th>Kursant/ka</th>
+                            <th>Poziom</th>
+                            <th>Dorosły</th>
+                            <th>Dziecko</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        {% for course in courseDetails %}
+
+                            <td>{{ course.course_user }}</td>
+                            <td>{{ course.instructor }}</td>
+                            <td id="adult">{{ course.adult }}</td>
+                            <td id="child">{{ course.child}}</td>
+
+                        {% endfor %}
+                    </tr>
+                </table>
+            </p>
+
+            {% for field in form  %}
+                <p>{{ field.label_tag }}<br>
+                    {{ field }}</p>
+
+            {% endfor %}
+
+            <p>
+                <button type="submit" name="submit">Wyślij potwierdzenie przelewu</button>
+                <button type="button" onclick="return jsDeleteReservation()">Skasuj rezerwację</button>
+            </p>
+        </div>
+    </form>
+
+
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/jQ.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+
+{% endblock %}
+

@@ -1,0 +1,85 @@
+<!doctype html>
+{% load staticfiles %}
+<html>
+<head>
+    <meta charset="utf-8" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Alegreya' rel='stylesheet'>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    {% block styles %}{% endblock %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            document.getElementById('move_to_main_two').addEventListener('click', function () {
+                window.scrollTo(0, 77)
+            });
+
+            document.getElementById('move_to_main_three').addEventListener('click', function () {
+                window.scrollTo(0, 704)
+            });
+        });
+    </script>
+</head>
+<title>
+    {% block title %}
+        Dominikańskie Mistrzostwa w Narciarstwie - Korbielów Pilsko
+    {% endblock %}
+</title>
+<body>
+    <div id="my_side_nav" class="side_nav">
+
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'main_auth' %}">Strona główna</a></li>
+            <li><a href="{% url 'logout' %}">Wyloguj</a></li>
+        {% else %}
+            <li><a href="{% url 'signup' %}">Zarejestruj się</a></li>
+            <li><a href="{% url 'login' %}">Zaloguj</a></li>
+            <li><a id="move_to_main_two">Historia Mistrzostw</a></li>
+            <li><a id="move_to_main_three">Schronisko</a></li>
+            <li><a href="{% url 'main' %}">Strona główna</a></li>
+        {% endif %}
+
+    </div>
+    <div id="main">
+        <h1 class="title">Dominikańskie Mistrzostwa w Narciarstwie - Korbielów Pilsko</h1>
+        {% block content %}
+                {% if user.is_authenticated %}
+                    {{ main}}{{' '}}{{user.username }}
+                {% else %}
+                    {{''}}
+                {% endif %}
+        {% endblock %}
+    </div>
+    <div id="main_two">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla feugiat tellus et neque suscipit, vel tincidunt nisl fermentum. Quisque quis nibh tempus, cursus ex vestibulum, bibendum justo. Nulla dictum, ex sed porta dignissim, velit lorem efficitur massa, consequat rutrum lectus mauris quis nibh. Aliquam interdum sit amet ex a pharetra. Vivamus dignissim hendrerit ex, sit amet gravida lacus dictum eu. Sed nulla nisi, porta a imperdiet quis, elementum sed elit. Aenean id suscipit nibh. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque quis magna ut erat varius faucibus. Duis luctus eros leo, non ultrices tellus molestie tincidunt. Proin feugiat, diam vel aliquet pretium, tellus nisi lacinia arcu, non bibendum lacus eros sed quam.
+        </p>
+        <p>
+            Vivamus laoreet nibh a nulla ultrices, vel luctus turpis placerat. Morbi in vestibulum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla iaculis imperdiet facilisis. Proin mi dui, laoreet pulvinar ligula ac, lobortis commodo lacus. Duis rutrum diam non tortor volutpat, in placerat sem luctus. Aliquam facilisis ultrices risus ac sagittis.
+        </p>
+        <p>
+            Vivamus suscipit metus ac faucibus iaculis. Nullam consectetur ullamcorper fringilla. Vivamus quis ligula id augue tempor feugiat ac id tortor. Proin dignissim cursus maximus. Integer eu sapien at odio accumsan elementum eu vitae tellus. In venenatis aliquam metus, sed cursus ante sollicitudin eget. In risus mi, tempor at dolor quis, sodales volutpat ipsum. Duis et orci turpis. Pellentesque quis lectus at sem tempor laoreet.
+        </p>
+    </div>
+    <div id="empty_div">
+        {% block content_two %}
+            <h2 class="title_two">
+                {{ msg }}
+            </h2>
+        {% endblock %}
+    </div>
+    <div id="main_three">
+        <p>
+            Nullam pharetra, massa vel facilisis cursus, velit sapien rutrum lectus, faucibus sollicitudin magna ipsum sed ex. Donec vehicula volutpat eros, a accumsan ipsum condimentum non. Etiam sit amet convallis neque, eu egestas neque. Pellentesque quam eros, scelerisque eget leo et, egestas egestas ipsum. Quisque lorem dolor, maximus nec sapien in, lacinia laoreet justo. Aliquam pharetra dolor mi, sit amet fermentum tortor feugiat ut. Nulla venenatis tellus in tortor efficitur luctus. Nunc convallis elit libero, ac tempor nunc cursus eleifend. Suspendisse tortor nisl, ultricies vitae ex finibus, vehicula commodo lacus. Fusce at eros sit amet quam tincidunt blandit vitae nec sem. Nullam bibendum bibendum tortor. Donec ut commodo lacus, at feugiat enim. Vestibulum tristique malesuada tincidunt. In dignissim purus vitae quam sagittis, vitae congue ante pretium. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed ullamcorper purus sed quam placerat, non viverra mauris congue.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lacinia ipsum et lectus sagittis ultrices. Integer tempus sodales lorem ac iaculis. Sed quis ante eget mauris pretium pharetra a non erat. Nullam pretium, enim sed scelerisque pellentesque, sapien diam hendrerit nibh, ut porta eros tellus nec augue. Aliquam id leo lectus. Sed eu dapibus orci. Sed pellentesque magna at metus aliquet, vitae volutpat tellus pharetra. Etiam ac semper augue. Integer enim lacus, pretium facilisis cursus nec, hendrerit at dui. Vivamus eu commodo ante.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc nisi augue, commodo eget maximus vitae, finibus eu erat. Suspendisse dapibus ultrices leo, eu blandit augue. Sed vitae nisl sed velit pulvinar faucibus at quis sem. Fusce rhoncus mattis molestie. Pellentesque mollis odio at massa dapibus gravida. Donec nulla mauris, suscipit et lacinia eget, dignissim ullamcorper arcu. Sed eget ante pretium, pretium nunc in, elementum sapien. Cras ullamcorper orci lectus, at volutpat mi pretium non. Praesent quis auctor nibh. Integer blandit ultrices leo, in bibendum leo gravida ac. Sed pulvinar nulla neque, ac ornare orci molestie tempor. Aenean luctus vehicula sapien nec tristique. Duis ultrices quam orci, a mattis turpis vestibulum accumsan.
+        </p>
+    </div>
+    <div id="empty_div_two"></div>
+
+    {% block js %}{% endblock %}
+
+</body>
+</html>

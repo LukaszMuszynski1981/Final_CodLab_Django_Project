@@ -1,0 +1,24 @@
+{% extends 'usertemplates/base_auth.html' %}
+
+{#{% csrf_token %}#}
+{% block content_two %}
+    <div class="div_reservation_form">
+        {% if msg %}
+
+            <p>{{ msg }}<p>
+
+        {% endif %}
+
+
+        {% for reservation in reservations %}
+                <p>
+                    <a href="{{ reservation.get_absolute_url }}"  style="color: black">
+                        Rezerwacja nr {{ reservation.id }}
+                    </a>
+                </p>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
