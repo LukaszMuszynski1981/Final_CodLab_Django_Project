@@ -1,58 +1,11 @@
-<!doctype html>
-{% load staticfiles %}
-<html>
-<head>
-    <meta charset="utf-8" content="width=device-width, initial-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Alegreya' rel='stylesheet'>
-    <link href="{% static 'css/style_auth.css' %}" rel="stylesheet">
-    {% block style %}{% endblock %}
-</head>
-<title>
-    {% block title %}
-        Dominikańskie Mistrzostwa w Narciarstwie - Korbielów Pilsko
-    {% endblock %}
-</title>
-<body>
-<header>
+{% extends 'usertemplates/base.html' %}
 
-</header>
-<div id="my_side_nav" class="side_nav">
+{% block content %}
+        <span class="title_two">{{ main }}</span>
+{% endblock %}
 
-        <li><a href="{% url 'main_auth' %}">Strona główna</a></li>
-        <li><a href="{% url 'reservation' %}">Rezerwuj</a></li>
-        <li><a href="{% url 'my-reservation' %}">Moje rezerwacje</a></li>
-        <li><a href="{% url 'logout' %}">Wyloguj</a></li>
-
-</div>
-<div id="main">
-
-    {% block content %}
-            <h1 class="title">Korbielów Pilsko</h1>
-            <span class="title_two">{{ main }}</span>
-    {% endblock %}
-
-</div>
-<div id="main_two">
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla feugiat tellus et neque suscipit, vel tincidunt nisl fermentum. Quisque quis nibh tempus, cursus ex vestibulum, bibendum justo. Nulla dictum, ex sed porta dignissim, velit lorem efficitur massa, consequat rutrum lectus mauris quis nibh. Aliquam interdum sit amet ex a pharetra. Vivamus dignissim hendrerit ex, sit amet gravida lacus dictum eu. Sed nulla nisi, porta a imperdiet quis, elementum sed elit. Aenean id suscipit nibh. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque quis magna ut erat varius faucibus. Duis luctus eros leo, non ultrices tellus molestie tincidunt. Proin feugiat, diam vel aliquet pretium, tellus nisi lacinia arcu, non bibendum lacus eros sed quam.
-    </p>
-    <p>
-        Vivamus laoreet nibh a nulla ultrices, vel luctus turpis placerat. Morbi in vestibulum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla iaculis imperdiet facilisis. Proin mi dui, laoreet pulvinar ligula ac, lobortis commodo lacus. Duis rutrum diam non tortor volutpat, in placerat sem luctus. Aliquam facilisis ultrices risus ac sagittis.
-    </p>
-</div>
-<div id="empty_div">
-    {% block content_two %}
-        <span class="title_two">{{ main_two }}</span>
-    {% endblock %}
-</div>
-<div id="main_three">
-    <p>
-        Nullam pharetra, massa vel facilisis cursus, velit sapien rutrum lectus, faucibus sollicitudin magna ipsum sed ex. Donec vehicula volutpat eros, a accumsan ipsum condimentum non. Etiam sit amet convallis neque, eu egestas neque. Pellentesque quam eros, scelerisque eget leo et, egestas egestas ipsum. Quisque lorem dolor, maximus nec sapien in, lacinia laoreet justo. Aliquam pharetra dolor mi, sit amet fermentum tortor feugiat ut. Nulla venenatis tellus in tortor efficitur luctus. Nunc convallis elit libero, ac tempor nunc cursus eleifend. Suspendisse tortor nisl, ultricies vitae ex finibus, vehicula commodo lacus. Fusce at eros sit amet quam tincidunt blandit vitae nec sem. Nullam bibendum bibendum tortor. Donec ut commodo lacus, at feugiat enim. Vestibulum tristique malesuada tincidunt. In dignissim purus vitae quam sagittis, vitae congue ante pretium. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed ullamcorper purus sed quam placerat, non viverra mauris congue.
-    </p>
-</div>
-<div id="empty_div_two"></div>
+{% block content_two %}
+    <span class="title_two">{{ main_two }}</span>
+{% endblock %}
 
 {% block js %}{% endblock %}
-
-</body>
-</html>

@@ -12,6 +12,7 @@ Used techniques:
 - jquery DOM modifications;
 - upload file option;
 - mail confirmation; 
+- two languguages supported;
 
 See attached screen shots;
 

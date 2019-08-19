@@ -33,7 +33,7 @@
         constructor: Datepicker,
 
         DEFAULTS: {
-            lang: 'en',
+            lang: en,
             date: null,   /* date strings should be in YYYY-M-D format like '2017-1-3', or format like '+3d' */
             startDate: new Date(),
             endDate: null,
@@ -43,14 +43,16 @@
         },
 
         msg: {
-            // en: {
-            //     months : ['January', 'February', 'March', 'April', 'May', 'June',
-            //         'July', 'August', 'September', 'October', 'November', 'December'],
-            //     days: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
+            en: {
+                months: ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'],
+                days: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
+            },
+
             pl: {
                 months: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
                     'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
-                days: ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Niedz'],
+                days: ['PO', 'WT', 'ŚR', 'CZ', 'PT', 'SO', 'NI'],
             }
         },
         

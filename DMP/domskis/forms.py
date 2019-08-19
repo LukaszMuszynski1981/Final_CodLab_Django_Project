@@ -2,7 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, get_user_model
-from .models import Rooms
+from datetime import datetime, timedelta
+from .models import Reservations, Rooms
 
 
 User = get_user_model()
@@ -11,8 +12,8 @@ User = get_user_model()
 def get_types_r():
 
     types_r = {}
-    available_types = Rooms.objects.exclude(avalamount__lte=0)
-    for _ in available_types.iterator():
+    avaliable_types = Rooms.objects.exclude(avalamount__lte=0)
+    for _ in avaliable_types.iterator():
         types_r[_.type] = _.description
     return tuple(sorted(types_r.items()))
 
@@ -78,14 +79,14 @@ class ReservationForm(forms.Form):
     )
     meal = forms.NullBooleanField(label='Wyżywienie na miejscu')
     instructor = forms.NullBooleanField(label='Czy potrzebujesz intruktora?')
-    i_name = forms.CharField(
+    i_name_one = forms.CharField(
         max_length=100,
         label='Imię',
         required=False
     )
-    child = forms.BooleanField(label='Dziecko', required=False)
-    adult = forms.BooleanField(label='Dorosły', required=False)
-    instructors = forms.ChoiceField(
+    child_one = forms.BooleanField(label='Dziecko', required=False)
+    adult_one = forms.BooleanField(label='Dorosły', required=False)
+    instructors_one = forms.ChoiceField(
         widget=forms.Select,
         choices=types_i,
         label='Poziom'
@@ -116,9 +117,14 @@ class ReservationForm(forms.Form):
     )
 
 
+class MyReservationForm(forms.Form):
+
+    id = forms.CharField(label='')
+
+
 class UploadFileForm(forms.Form):
 
-    file = forms.FileField(label='Plik PDF')
+    file = forms.FileField()
 
 
 class OnlyEmailForm(forms.Form):

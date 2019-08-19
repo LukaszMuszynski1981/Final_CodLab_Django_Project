@@ -11,8 +11,10 @@
                     <p>{{ field.label_tag }}<br>
                         {{ field }}</p>
                 {% endfor %}
-            <a class = "title_four" href="{% url 'reset-password' %}">Nie pamiętam hasła</a><br>
-            <input type="submit" value="Zaloguj">
+            <p>
+                <input class = "login_input" type="submit" value="Zaloguj">
+                <a class = "reset_link" href="{% url 'reset-password' %}">Nie pamiętam hasła</a>
+            </p>
         </form>
 
 {% endblock %}>

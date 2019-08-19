@@ -14,9 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls.i18n import i18n_patterns
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from domskis.views import (
     sign_up,
     activate,
@@ -29,6 +31,8 @@ from domskis.views import (
     ResetPasswordView,
     confirm_reset,
     ProperReservationView,
+    AfterSuccessfulReservationView,
+    AfterSuccessfulUploadView,
 )
 
 urlpatterns = [
@@ -39,11 +43,14 @@ urlpatterns = [
             activate, name='activate'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name="logout"),
-    path('main_auth', MainAuthView.as_view(), name='main_auth'),
-    path('reservation', ReservationView.as_view(), name='reservation'),
-    path('my-reservation', MyReservationView.as_view(), name='my-reservation'),
-    path('reset-password', ResetPasswordView.as_view(), name='reset-password'),
+    path('main-auth/', MainAuthView.as_view(), name='main-auth'),
+    path('reservation/', ReservationView.as_view(), name='reservation'),
+    path('my-reservation/', MyReservationView.as_view(), name='my-reservation'),
+    path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
+    path('my-reservation/upload-success', AfterSuccessfulUploadView.as_view(), name='upload-success'),
+    path('reservation/success', AfterSuccessfulReservationView.as_view(), name='success'),
     re_path(r'^my-reservation/(?P<reservation_id>[0-9]+$)', ProperReservationView.as_view(), name='reservation-id'),
-    re_path(r'^reset-password/confirm_reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})$',
-            confirm_reset, name='confirm_reset'),
+    re_path(r'^reset-password/confirm-reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})$',
+            confirm_reset, name='confirm-reset'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

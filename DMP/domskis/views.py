@@ -1,7 +1,7 @@
 import datetime as dt
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.sessions.models import Session
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -17,6 +17,7 @@ from .forms import (
     SignupForm,
     LoginForm,
     ReservationForm,
+    MyReservationForm,
     ResetPasswordForm,
     UploadFileForm,
     OnlyEmailForm,
@@ -67,7 +68,13 @@ def send_email(request, raw_message, raw_message_details=None):
 
 def sign_up(request):
 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        form = SignupForm()
+        return TemplateResponse(request, 'usertemplates/signup.html', {
+            'form': form
+        })
+
+    else:
         form = SignupForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data.get('email')
@@ -104,10 +111,6 @@ def sign_up(request):
              że Ty to Ty'
             })
 
-    else:
-        form = SignupForm()
-    return render(request, 'usertemplates/signup.html', {'form': form})
-
 
 def activate(request, uidb64, token):
     try:
@@ -119,8 +122,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('main_auth')
-        # return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        return redirect('main-auth')
     else:
         return HttpResponse('Activation link is invalid!')
 
@@ -134,18 +136,26 @@ def confirm_reset(request, uidb64, token):
         user = None
 
     if request.method == 'GET':
+
         if user is not None and account_activation_token.check_token(user, token):
             return TemplateResponse(request, 'usertemplates/reset_password_form.html', {
                 'form': ResetPasswordForm()
             })
 
     if request.method == 'POST':
-        new_password = request.POST['new_password2']
-        if user is not None:
-            user.set_password(new_password)
+
+        form = ResetPasswordForm(data=request.POST)
+        if user and form.is_valid():
+            user.set_password(form.cleaned_data['new_password2'])
             user.save()
-            login(request, user)
-            return redirect(to='main_auth')
+            rsp = redirect(to='login')
+        else:
+            rsp = TemplateResponse(request, 'usertemplates/reset_password_form.html', {
+                'form': ResetPasswordForm(),
+                'msg': 'Hasła nie są jednakowe. Spróbuj ponownie'
+            })
+
+        return rsp
 
 
 def validate_dates_serializer(arr_date, dep_date):
@@ -156,10 +166,11 @@ def validate_dates_serializer(arr_date, dep_date):
     for reservation in reservations.iterator():
         if reservation.arrival <= arr_date < reservation.departure or \
                                 reservation.arrival < dep_date <= reservation.departure:
-            try:
-                valid_rooms[reservation.room.type] += 1
-            except KeyError:
-                valid_rooms[reservation.room.type] = 1
+            # try:
+            #     valid_rooms[reservation.room.type] += 1
+            # except KeyError:
+            #     valid_rooms[reservation.room.type] = 1
+            valid_rooms[reservation.room.type] = valid_rooms.get(reservation.room.type, 0) + 1
 
     rooms = Rooms.objects.all()
     for room in rooms.iterator():
@@ -168,6 +179,16 @@ def validate_dates_serializer(arr_date, dep_date):
                 valid_rooms[room.type] = 'not available'
 
     return valid_rooms
+
+
+def get_lang(request):
+
+    try:
+        answer = request.COOKIES['lang']
+    except KeyError:
+        answer = None
+
+    return answer
 
 
 class LoginView(View):
@@ -183,12 +204,15 @@ class LoginView(View):
         form = LoginForm(data=request.POST)
         if form.is_valid():
             login(request, form.user)
-            return redirect(to='main_auth')
+            request.session.set_expiry(600)
+            answer = redirect(to='main-auth')
         else:
             ctx = {'form': LoginForm(),
                    'msg': 'Login lub hasło są nieprawidłowe. Spróbuj ponownie'
                    }
-            return TemplateResponse(request, 'usertemplates/login_form.html', ctx)
+            answer = TemplateResponse(request, 'usertemplates/login_form.html', ctx)
+
+        return answer
 
 
 class LogoutView(View):
@@ -201,23 +225,32 @@ class LogoutView(View):
 class MainView(View):
 
     def get(self, request):
-        return TemplateResponse(request, 'usertemplates/base.html', {'main': 'Miło Cię widzieć'})
+
+        lang = get_lang(request)
+
+        if lang and lang == 'pl' or not lang:
+            answer = TemplateResponse(request, 'usertemplates/base.html', {})
+        elif lang and lang == 'en':
+            answer = TemplateResponse(request, 'usertemplates/base_en.html', {})
+
+        return answer
 
 
 class MainAuthView(View):
 
     def get(self, request):
+
         if request.session.session_key is None:
-            return redirect(to='logout')
+            answer = redirect(to='logout')
+        #
+        # try:
+        #     user = get_user(request)
+        # except User.DoesNotExist:
+        #     return redirect(to='logout')
+        else:
+            answer = TemplateResponse(request, 'usertemplates/base_auth.html', {})
 
-        try:
-            user = get_user(request)
-        except User.DoesNotExist:
-            return redirect(to='logout')
-
-        return TemplateResponse(request, 'usertemplates/base_auth.html', {
-            'main': 'Miło Cię widzieć ' + user.username,
-        })
+        return answer
 
 
 class ReservationView(View):
@@ -225,90 +258,94 @@ class ReservationView(View):
     def get(self, request):
 
         if request.is_ajax():
-            requested_type = request.GET['requested_type']
-            arr_date = dt.datetime.strptime(request.GET['arriveDate'], '%Y-%m-%d')
-            dep_date = dt.datetime.strptime(request.GET['departureDate'], '%Y-%m-%d')
-            room = Rooms.objects.get(type=requested_type)
-            days_spend = dep_date - arr_date
-            return JsonResponse({
-                'price': room.price * days_spend.days,
-                'meal': 60 * days_spend.days,
-                'instructor': 50
-            })
-
+            if request.GET['what'] == 'requestedRoom':
+                requested_type = request.GET['requested_type']
+                arr_date = dt.datetime.strptime(request.GET['arriveDate'], '%Y-%m-%d')
+                dep_date = dt.datetime.strptime(request.GET['departureDate'], '%Y-%m-%d')
+                room = Rooms.objects.get(type=requested_type)
+                days_spend = dep_date - arr_date
+                answer = JsonResponse({
+                    'price': room.price * days_spend.days,
+                    'meal': 60 * days_spend.days,
+                    'instructor': 50
+                })
+            if request.GET['what'] == 'dateTocheck':
+                arr_date = dt.datetime.strptime(request.GET['arriveDate'], '%Y-%m-%d').date()
+                dep_date = dt.datetime.strptime(request.GET['departureDate'], '%Y-%m-%d').date()
+                validated_dates = validate_dates_serializer(arr_date, dep_date)
+                answer = JsonResponse({'notAvailableRooms': validated_dates})
         else:
-            return TemplateResponse(request, 'usertemplates/reservationview_form.html', {
+            answer = TemplateResponse(request, 'usertemplates/reservationview_form.html', {
                 'form': ReservationForm(),
                 'msg_ins': '*(Te pola nie są wymagane)'
             })
 
+        return answer
+
     def post(self, request):
 
-        if request.is_ajax():
-            arr_date = dt.datetime.strptime(request.POST['arriveDate'], '%Y-%m-%d').date()
-            dep_date = dt.datetime.strptime(request.POST['departureDate'], '%Y-%m-%d').date()
-            validated_dates = validate_dates_serializer(arr_date, dep_date)
-            return JsonResponse({'notAvailableRooms': validated_dates})
-
-        user = get_user(request)
-        form = ReservationForm(data=request.POST, files=request.FILES)
-        rented_room = get_a_room(request)
-
-        if form.is_valid():
-            r = Reservations.objects.create(
-                name=form.cleaned_data['name'],
-                surname=form.cleaned_data['surname'],
-                arrival=form.cleaned_data['arrive'],
-                departure=form.cleaned_data['departure'],
-                meal=form.cleaned_data['meal'],
-                instructor=form.cleaned_data['instructor'],
-                user_id=user.id,
-                room=rented_room
-            )
-            if form.cleaned_data['adult'] or form.cleaned_data['child']:
-                CourseDetails.objects.create(
-                    instructor=get_instructor(request, 'instructors'),
-                    reservation=r,
-                    course_user=form.cleaned_data['i_name'],
-                    adult=form.cleaned_data['adult'],
-                    child=form.cleaned_data['child']
-                )
-
-            if form.cleaned_data['adult_two'] or form.cleaned_data['child_two']:
-                CourseDetails.objects.create(
-                    instructor=get_instructor(request, 'instructors_two'),
-                    reservation=r,
-                    course_user=form.cleaned_data['i_name_two'],
-                    adult=form.cleaned_data['adult_two'],
-                    child=form.cleaned_data['child_two']
-                )
-
-            if form.cleaned_data['adult_three'] or form.cleaned_data['child_three']:
-                CourseDetails.objects.create(
-                    instructor=get_instructor(request, 'instructors_three'),
-                    reservation=r,
-                    course_user=form.cleaned_data['i_name_three'],
-                    adult=form.cleaned_data['adult_three'],
-                    child=form.cleaned_data['child_three']
-                )
-
-            r_details = r.coursedetails_set.filter(
-                    course_user__iregex=r'[1-9a-xA-Z]+'
-                ).order_by('updated_at')
-            send_email(request, r, r_details)
-
-            return TemplateResponse(request, 'usertemplates/base_auth.html', {
-                'main': 'Numer Twojej rezerwacji - {}'.format(r.id)
-            })
+        if request.session.session_key is None:
+            answer = redirect(to='login')
 
         else:
+            user = get_user(request)
+            form = ReservationForm(data=request.POST, files=request.FILES)
+            rented_room = get_a_room(request)
 
-            return TemplateResponse(request, 'usertemplates/reservationview_form.html', {
-                'form': ReservationForm(),
-                'msg': 'Nie wszystko poszło zgodnie z planem. Spróbuj jeszcze raz, upewnij się, że wszystkie pola '\
-                       'są wypełenione'
+            if form.is_valid():
+                r = Reservations.objects.create(
+                    name=form.cleaned_data['name'],
+                    surname=form.cleaned_data['surname'],
+                    arrival=form.cleaned_data['arrive'],
+                    departure=form.cleaned_data['departure'],
+                    meal=form.cleaned_data['meal'],
+                    instructor=form.cleaned_data['instructor'],
+                    user_id=user.id,
+                    room=rented_room
+                )
+                if form.cleaned_data['adult_one'] or form.cleaned_data['child_one']:
+                    CourseDetails.objects.create(
+                        instructor=get_instructor(request, 'instructors_one'),
+                        course_user=form.cleaned_data['i_name_one'],
+                        adult=form.cleaned_data['adult_one'],
+                        child=form.cleaned_data['child_one'],
+                        reservation=r
+                    )
 
-            })
+                if form.cleaned_data['adult_two'] or form.cleaned_data['child_two']:
+                    CourseDetails.objects.create(
+                        instructor=get_instructor(request, 'instructors_two'),
+                        course_user=form.cleaned_data['i_name_two'],
+                        adult=form.cleaned_data['adult_two'],
+                        child=form.cleaned_data['child_two'],
+                        reservation=r
+                    )
+
+                if form.cleaned_data['adult_three'] or form.cleaned_data['child_three']:
+                    CourseDetails.objects.create(
+                        instructor=get_instructor(request, 'instructors_three'),
+                        course_user=form.cleaned_data['i_name_three'],
+                        adult=form.cleaned_data['adult_three'],
+                        child=form.cleaned_data['child_three'],
+                        reservation=r
+                    )
+
+                r_details = r.coursedetails_set.filter(
+                        course_user__iregex=r'[1-9a-xA-Z]+'
+                    ).order_by('updated_at')
+                send_email(request, r, r_details)
+                answer = HttpResponseRedirect('success')
+
+            else:
+
+                answer = TemplateResponse(request, 'usertemplates/reservationview_form.html', {
+                    'form': ReservationForm(),
+                    'msg': 'Nie wszystko poszło zgodnie z planem. Spróbuj jeszcze raz, upewnij się, że wszystkie pola '\
+                           'są wypełenione'
+
+                })
+
+        return answer
 
 
 class MyReservationView(View):
@@ -323,12 +360,10 @@ class MyReservationView(View):
             reservation = Reservations.objects.filter(user_id=user_id).order_by('created_at')
             answer = TemplateResponse(request, 'usertemplates/myreservationview__form.html', {
                     'reservations': reservation,
-                    'msg': reservation[0].user
                 })
-            return answer
         except IndexError:
-            answer = TemplateResponse(request, 'usertemplates/base_auth.html', {
-                'main': 'Nie masz żadnych rezerwacji'
+            answer = TemplateResponse(request, 'usertemplates/myreservationview__form.html', {
+                'msg': 'Nie masz żadnych rezerwacji'
             })
 
         return answer
@@ -348,6 +383,8 @@ class ProperReservationView(View):
         answer = TemplateResponse(request, 'usertemplates/properreservationview__form.html', {
             'msg': 'Szczegóły rezerwacji',
             'reservation': reservation,
+            'arr_date': reservation.arrival.strftime('%Y/%m/%d'),
+            'dep_date': reservation.departure.strftime('%Y/%m/%d'),
             'courseDetails': course_details,
             'form': UploadFileForm()
         })
@@ -358,21 +395,20 @@ class ProperReservationView(View):
 
         if request.is_ajax():
             Reservations.objects.filter(pk=reservation_id).delete()
-            return JsonResponse({"redirect": 'true', "redirect_url": "http://127.0.0.1:8000/my-reservation"})
+            answer = JsonResponse({"redirect": 'true', "redirect_url": "http://127.0.0.1:8000/my-reservation"})
+
         else:
             form = UploadFileForm(request.POST, request.FILES)
             if form.is_valid():
                 reservation = Reservations.objects.get(id=reservation_id)
                 reservation.file = request.FILES['file']
                 reservation.save()
-                if get_user(request):
-                    return TemplateResponse(request, 'usertemplates/base_auth.html', {
-                        'main': 'Plik został poprawnie załadowany. Dzięki i do zobaczenia'
-                    })
-                else:
-                    return redirect('main_auth')
+                answer = HttpResponseRedirect('upload-success')
+
             else:
-                return redirect(to='my-reservation')
+                answer = HttpResponseRedirect('my-reservation')
+
+        return answer
 
 
 class ResetPasswordView(View):
@@ -389,9 +425,9 @@ class ResetPasswordView(View):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return TemplateResponse(request, 'usertemplates/login_form.html', {
+            return TemplateResponse(request, 'usertemplates/only_email_form.html', {
                 'form': OnlyEmailForm(),
-                'msg': 'Adres mailowy jest niepoprawny'
+                'msg': 'Email jest nieprawidłowy'
             })
         current_site = get_current_site(request)
         mail_subject = 'Zmiana hasła w serwisie DMP'
@@ -408,3 +444,22 @@ class ResetPasswordView(View):
         return TemplateResponse(request, 'usertemplates/base.html', {
             'msg': 'Na Twojego maila wysłalismy link potwierdzjący zmianę hasła'
         })
+
+
+class AfterSuccessfulUploadView(View):
+
+    def get(self, request):
+
+        return TemplateResponse(request, 'usertemplates/base.html', {
+            'msg': 'Plik załadowany został poprawnie.'
+        })
+
+
+class AfterSuccessfulReservationView(View):
+
+    def get(self, request):
+
+        return TemplateResponse(request, 'usertemplates/base.html', {
+            'msg': 'Wszystko się udało. Zarezerwowałeś pokój na Mistrzostwa. Dziekujemy i do zobaczenia'
+        })
+

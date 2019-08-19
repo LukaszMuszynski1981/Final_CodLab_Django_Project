@@ -1,8 +1,7 @@
-{% extends 'usertemplates/base_auth.html' %}
+{% extends 'usertemplates/base.html' %}
 {% load staticfiles %}
 {% block style %}
     <link href="{% static 'css/jquery-datepicker.css' %}" rel="stylesheet">
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 {% endblock %}
 {% block content_two %}
 
@@ -10,10 +9,10 @@
         <h4 class="title_two">{{ msg }}</h4>
     {% endif %}
 
-    <form method="post" id="reservation_form" enctype="multipart/form-data">
+    <form method="post" id="reservation_form">
     {% csrf_token %}
         <div class="div_reservation_form">
-            <h2 class="title_two" style="color: black">Krok pierwszy...</h2>
+            <h2 class="title_two">Krok pierwszy...</h2>
                 <table class="table_reservation_form">
                     <tr>
                         {% for field in form %}
@@ -41,108 +40,100 @@
                                 </td>
                             {% endif %}
                         {% endfor %}
-                        <tr>
-                            <td>
-                                <button type="button" id="date_confirmation"
-                                        onclick="return jsValidateForm()">Dalej</button>
-                            </td>
-                        </tr>
-                    </tr>
-            </table>
-        </div>
-        <p></p>
-            <div class="div_reservation_form hidden">
-                <h2 class="title_two" style="color: black">Krok drugi...</h2>
-                 <table class="table_reservation_form">
-                     <tr>
-                     {% for field in form %}
-                         {% if field.name == 'room' %}
-                             <td>{{ field.label_tag }}</td>
-                             <td onchange="jsReturnPrice()">{{ field }}</td>
-                             <td><spam id="total_room_price"></spam></td>
-                         {% endif %}
-                     {% endfor %}
-                     </tr>
-                     {% for field in form %}
-                        {% if field.name == 'meal' %}
-                            <tr>
-                                <td>{{ field.label_tag }}</td>
-                                <td>{{ field }}</td>
-                                <td><span class="hidden" id="total_meal_price"></span></td>
-                            </tr>
-                        {% endif %}
-                     {% endfor %}
-                     {% for field in form %}
-                         {% if field.name == 'instructor' %}
-                             <tr>
-                                 <td>{{ field.label_tag }}</td>
-                                 <td>{{ field }}</td>
-                                 <td><span class="hidden" id="instructor_price_per_day"></span></td>
-                             </tr>
-                         {% endif %}
-                     {% endfor %}
-                     <tr>
-                         <td>
-                             <button class="hidden" id="reservation_button_one" type="submit">
-                                 Rezerwuj
-                             </button>
-                         </td>
-                     </tr>
-                 </table>
-            </div>
-        <p></p>
-            <div class="div_reservation_form hidden">
-                <h2 class="title_two" style="color: black">Krok trzeci...</h2>
-                <table class="table_reservation_form_three">
-                     <tr>
-                         {% for field in form %}
-                             {% if field.name == 'i_name' or field.name == 'child' or field.name == 'adult'%}
-                                     <td>{{ field.label_tag }}</td>
-                                     <td>{{ field }}</td>
-                             {% endif %}
-                         {% endfor %}
-                         {% for field in form %}
-                             {% if field.name == 'instructors'%}
-                                 <td>{{ field.label_tag }}</td>
-                                 <td>{{ field }}</td>
-                             {% endif %}
-                         {% endfor %}
-                     </tr>
-                     <tr>
-                        {% for field in form %}
-                            {% if field.name == 'i_name_two' or field.name == 'child_two' or field.name == 'adult_two'%}
-                                <td>{{ field.label_tag }}</td>
-                                <td>{{ field }}</td>
-                            {% endif %}
-                        {% endfor %}
-                        {% for field in form %}
-                            {% if field.name == 'instructors_two'%}
-                                <td>{{ field.label_tag }}</td>
-                                <td>{{ field }}</td>
-                                <td class="msg">{{ msg_ins }}</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        {% for field in form %}
-                            {% if field.name == 'i_name_three' or field.name == 'child_three' or field.name == 'adult_three'%}
-                                <td>{{ field.label_tag }}</td>
-                                <td>{{ field }}</td>
-                            {% endif %}
-                        {% endfor %}
-                        {% for field in form %}
-                            {% if field.name == 'instructors_three'%}
-                                <td>{{ field.label_tag }}</td>
-                                <td>{{ field }}</td>
-                                <td class="msg">{{ msg_ins }}</td>
-                            {% endif %}
-                        {% endfor %}
                     </tr>
                 </table>
-                <button class="hidden" id="reservation_button_two" type="submit">
-                    Rezerwuj
-                </button>
-            </div>
+        </div>
+        <div class="div_reservation_form hidden">
+            <h2 class="title_two">Krok drugi...</h2>
+             <table class="table_reservation_form">
+                 <tr>
+                 {% for field in form %}
+                     {% if field.name == 'room' %}
+                         <td>{{ field.label_tag }}</td>
+                         <td onchange="jsReturnPrice()">{{ field }}</td>
+                         <td><spam id="total_room_price"></spam></td>
+                     {% endif %}
+                 {% endfor %}
+                 </tr>
+                 {% for field in form %}
+                    {% if field.name == 'meal' %}
+                        <tr>
+                            <td>{{ field.label_tag }}</td>
+                            <td>{{ field }}</td>
+                            <td><span class="hidden" id="total_meal_price"></span></td>
+                        </tr>
+                    {% endif %}
+                 {% endfor %}
+                 {% for field in form %}
+                     {% if field.name == 'instructor' %}
+                         <tr>
+                             <td>{{ field.label_tag }}</td>
+                             <td>{{ field }}</td>
+                             <td><span class="hidden" id="instructor_price_per_day"></span></td>
+                         </tr>
+                     {% endif %}
+                 {% endfor %}
+                 <tr>
+                     <td>
+                         <button class="hidden" id="reservation_button_one" type="submit">
+                             Rezerwuj
+                         </button>
+                     </td>
+                 </tr>
+             </table>
+        </div>
+        <div class="div_reservation_form hidden">
+            <h2 class="title_two">Krok trzeci...</h2>
+            <table class="table_reservation_form_three">
+                 <tr>
+                     {% for field in form %}
+                         {% if field.name == 'i_name_one' or field.name == 'child_one' or field.name == 'adult_one'%}
+                                 <td>{{ field.label_tag }}</td>
+                                 <td>{{ field }}</td>
+                         {% endif %}
+                     {% endfor %}
+                     {% for field in form %}
+                         {% if field.name == 'instructors_one'%}
+                             <td>{{ field.label_tag }}</td>
+                             <td>{{ field }}</td>
+                         {% endif %}
+                     {% endfor %}
+                 </tr>
+                 <tr>
+                    {% for field in form %}
+                        {% if field.name == 'i_name_two' or field.name == 'child_two' or field.name == 'adult_two'%}
+                            <td>{{ field.label_tag }}</td>
+                            <td>{{ field }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    {% for field in form %}
+                        {% if field.name == 'instructors_two'%}
+                            <td>{{ field.label_tag }}</td>
+                            <td>{{ field }}</td>
+                            <td class="msg">{{ msg_ins }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for field in form %}
+                        {% if field.name == 'i_name_three' or field.name == 'child_three' or field.name == 'adult_three'%}
+                            <td>{{ field.label_tag }}</td>
+                            <td>{{ field }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    {% for field in form %}
+                        {% if field.name == 'instructors_three'%}
+                            <td>{{ field.label_tag }}</td>
+                            <td>{{ field }}</td>
+                            <td class="msg">{{ msg_ins }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </table>
+            <button class="hidden" id="reservation_button_two" type="submit">
+                Rezerwuj
+            </button>
+        </div>
     </form>
 
 {% endblock %}
@@ -151,7 +142,7 @@
     <script src="{% static 'js/app.js' %}"></script>
     <script src="{% static 'js/jquery-datepicker.js' %}"></script>
     <script>
-        $('.jquery-datepicker').datepicker({
+        $(".jquery-datepicker").datepicker({
             lang: 'pl',
             format: 'yyyy-mm-dd',
         });

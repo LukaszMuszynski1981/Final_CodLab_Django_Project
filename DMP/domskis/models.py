@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 
 User = get_user_model()
@@ -59,8 +60,7 @@ class Reservations(models.Model):
         return '/my-reservation/{pk}'.format(pk=self.id)
 
     def __str__(self):
-        return '{} {} {} {} {}'.format(self.name, self.surname, self.arrival, self.departure,
-                                       self.room.get_type_display())
+        return '{} {} {}'.format(self.name, self.surname, self.room.get_type_display())
 
 
 class CourseDetails(models.Model):

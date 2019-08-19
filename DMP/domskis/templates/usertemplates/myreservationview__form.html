@@ -1,18 +1,18 @@
-{% extends 'usertemplates/base_auth.html' %}
+{% extends 'usertemplates/base.html' %}
 
 {#{% csrf_token %}#}
 {% block content_two %}
     <div class="div_reservation_form">
         {% if msg %}
 
-            <p>{{ msg }}<p>
+            <p class="title_two"><b>{{ msg }}</b><p>
 
         {% endif %}
 
 
         {% for reservation in reservations %}
                 <p>
-                    <a href="{{ reservation.get_absolute_url }}"  style="color: black">
+                    <a class="reservation_link" href="{{ reservation.get_absolute_url }}">
                         Rezerwacja nr {{ reservation.id }}
                     </a>
                 </p>

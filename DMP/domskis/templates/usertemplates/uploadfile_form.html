@@ -8,9 +8,11 @@
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+
             {% for field in form  %}
                 <p>{{ field.label_tag }}<br>
                     {{ field }}</p>
+
             {% endfor %}
             <p><button type="submit">Wyślij</button></p>
         </form>

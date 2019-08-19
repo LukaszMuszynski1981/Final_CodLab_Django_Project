@@ -9,23 +9,71 @@ body {
 
 input {
     font-family: 'Lucida Sans Unicode', 'Alegreya';
+    border: 1px solid #c4c4c4;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 3px 5px;
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+    width: 190px;
 }
 
-button{
-    font-family: 'Lucida Sans Unicode', 'Alegreya';
+#cookies-message {
+    opacity: 1;
+    text-align: center;
+}
+
+#cookies-message a:hover {
+    font-size: 17px;
+}
+
+.login_input {
+    width: 85px;
 }
 
 .title {
     font-size: x-large;
 }
 
-.title_two {
-    font-size: large;
+.sub_main {
+    position: relative;
 }
 
-.title_four {
+.inner_sub_main {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: -23em;
+    width: 50%;
+    height: 50%;
+    margin: auto;
+    align-content: center;
+}
+
+.lang {
+    float: right;
+    background-repeat: no-repeat;
+    width: 1.33333333em;
+    line-height: 1em;
+    padding-bottom: 15px;
+}
+
+#pl {
+    background-image: url("../jpg/pl.svg");
+}
+
+#en {
+    background-image: url("../jpg/gb.svg");
+}
+
+.title_two {
+    font-size: large;
+    color: black;
+}
+
+.reset_link {
     font-size: 10px;
-    padding-left: 145px;
+    padding-left: 31px;
 }
 .side_nav {
     height: 100%;
@@ -50,35 +98,134 @@ button{
     transition: 0.3s;
 }
 
+.user_name {
+    padding: 4px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 20px;
+    color: black;
+    display: block;
+    transition: 0.3s;
+}
+
 .side_nav a:hover {
     color: black;
     font-size: 20px;
 }
 
-#main {
-    transition: margin-left .5s;
+#main{
     padding: 16px;
-    margin-left: 160px;
+    margin-left: 173px;
 }
 
 #main_two, #main_three{
-    transition: margin-left .5s;
-    /*padding: 16px;*/
-    padding-left: 180px;
-    /*margin-right: -20px;*/
+    padding-left: 160px;
     size: auto;
 }
 
 #empty_div, #empty_div_two{
-    transition: margin-left .5s;
-    /*padding: 16px;*/
-    padding-left: 180px;
-    /*margin-right: -20px;*/
+    padding-left: 160px;
     min-height: 300px;
     height: auto;
 }
+
+
+.div_reservation_form {
+    border-radius: 20px;
+    min-height: 150px;
+    width: 100%;
+}
+
+.div_reservation_form table, p, h2, tr, td{
+    margin-left: 30px;
+}
+
+
+.hidden {
+    visibility: hidden;
+}
+
+.msg {
+    font-size: 10px;
+    font-style: italic;
+}
+
+#reservation_button_two {
+    margin-left: 45px;
+}
+
+.table_reservation_form td, tr{
+    text-align: justify;
+    min-width: 100px;
+    padding-left: 15px;
+}
+
+.table_reservation_form_three td, tr{
+    min-width: 20px;
+    text-align: justify;
+    padding-left: 15px;
+}
+
+#id_room, #id_meal, #id_instructor{
+    min-width: 216px;
+}
+
+#id_child_one, #id_adult_one, #id_child_two, #id_adult_two, #id_child_three, #id_adult_three  {
+    width: 10px;
+    text-align: left;
+}
+
+#id_file {
+    width: auto;
+}
+
+.proper_reservation_table {
+    border: 1px darkgrey groove;
+    border-radius: 5px;
+    background-color: #FFF;
+}
+
+.proper_reservation_table th{
+    text-align: center;
+    font-size: 15px;
+    min-width: 100px;
+}
+
+.proper_reservation_table td{
+    text-align: center;
+    font-size: 15px;
+}
+form, button, select {
+    font-family: 'Lucida Sans Unicode', 'Alegreya';
+}
+
+[name="arrive"] {
+    background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat ;
+}
+
+[name="departure"] {
+    background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat ;
+}
+
 
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 10px;}
     .sidenav a {font-size: 18px;}
 }
+
+.reservation_link {
+    background-color: #00AFBF;
+    padding: 5px 10px;
+    color: #FFF;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    display: inline-block;
+    text-decoration: none;
+    min-width: 140px;
+    text-align: center;
+}
+
+#upload_redirection {
+    cursor: pointer;
+}
+

@@ -87,7 +87,7 @@ DATABASES = {
         'NAME': 'DMP',
         'ENGINE': 'django.db.backends.postgresql',
         'USER': 'postgres',
-        'PASSWORD': 'coderslab'
+        'PASSWORD': ''
     }
 }
 

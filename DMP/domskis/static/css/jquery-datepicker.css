@@ -99,7 +99,7 @@
 }
 
 .jquery-datepicker__panel .jquery-datepicker__day.-is--selected {
-  background-color: orange;
+  background-color: #00AFBF;
 }
 
 .jquery-datepicker__panel .jquery-datepicker__day.-is--selected span {
@@ -162,11 +162,11 @@
 
 .fa-chevron-left:before {
   content:"<<";
-  color: orange;
+  color: #00AFBF;
 }
 
 .fa-chevron-right:before {
   content:">>";
-  color: orange;
+  color: #00AFBF;
 }
 
